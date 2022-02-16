@@ -69,10 +69,10 @@ public class UserController {
             throw new InvalidJwtTokenException("The authorization token is invalid");
     }
 
-    @PutMapping(path = "{studentId}")
-    public ResponseEntity<String> updateUser(@PathVariable long studentId, @RequestParam(required = false) String name, @RequestParam(required = false) String email, @RequestHeader String authorization) throws InvalidJwtTokenException {
+    @PutMapping(path = "update")
+    public ResponseEntity<String> updateUser(@RequestParam(required = false) String name, @RequestParam(required = false) String email, @RequestHeader String authorization) throws InvalidJwtTokenException {
         if (jwtUtil.validateToken(authorization.substring(7))) {
-            userService.updateUser(studentId, name, email);
+            userService.updateUser(userService.getUserByUsername(jwtUtil.extractUsername(authorization.substring(7))).getId(), name, email);
             return ResponseEntity.ok("User updated successfully");
         } else
             throw new InvalidJwtTokenException("The authorization token is invalid");
