@@ -20,14 +20,12 @@ public class UserController {
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
-    private final User user;
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserController(UserService userService, JwtUtil jwtUtil, User user, AuthenticationManager authenticationManager) {
+    public UserController(UserService userService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
-        this.user = user;
         this.authenticationManager = authenticationManager;
     }
 
@@ -48,7 +46,6 @@ public class UserController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> generateToken(@RequestBody AuthenticationRequest authenticationRequest) {
-        System.out.println(authenticationRequest.getUsername() + authenticationRequest.getPassword());
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
@@ -64,7 +61,7 @@ public class UserController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteUser(@RequestHeader String authorization) throws InvalidJwtTokenException {
-        if (jwtUtil.validateToken(authorization.substring(7), user)) {
+        if (jwtUtil.validateToken(authorization.substring(7))) {
             User user = userService.getUserByUsername(jwtUtil.extractUsername(authorization.substring(7)));
             userService.deleteUser(user.getId());
             return ResponseEntity.ok("User deleted successfully");
@@ -74,7 +71,7 @@ public class UserController {
 
     @PutMapping(path = "{studentId}")
     public ResponseEntity<String> updateUser(@PathVariable long studentId, @RequestParam(required = false) String name, @RequestParam(required = false) String email, @RequestHeader String authorization) throws InvalidJwtTokenException {
-        if (jwtUtil.validateToken(authorization.substring(7), user)) {
+        if (jwtUtil.validateToken(authorization.substring(7))) {
             userService.updateUser(studentId, name, email);
             return ResponseEntity.ok("User updated successfully");
         } else
@@ -83,7 +80,7 @@ public class UserController {
 
     @GetMapping(path = "/profile")
     public ResponseEntity<User> getProfile(@RequestHeader String authorization) throws InvalidJwtTokenException {
-        if (jwtUtil.validateToken(authorization.substring(7), user)) {
+        if (jwtUtil.validateToken(authorization.substring(7))) {
             return ResponseEntity.ok(userService.getUserByUsername(jwtUtil.extractUsername(authorization.substring(7))));
         } else
             throw new InvalidJwtTokenException("The authorization token is invalid");
