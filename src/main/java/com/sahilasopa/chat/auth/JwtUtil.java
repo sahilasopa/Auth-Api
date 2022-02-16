@@ -17,14 +17,12 @@ import java.util.function.Function;
 @Service
 public class JwtUtil {
     private final UserService userService;
-
     private final String SECRET_KEY;
 
     @Autowired
     public JwtUtil(UserService userService, @Value("${jwt.secret}") String secret_key) {
         this.userService = userService;
         SECRET_KEY = secret_key;
-        System.out.println(secret_key);
     }
 
     public String extractUsername(String token) {
@@ -60,9 +58,9 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token) {
         final String username = extractUsername(token);
-        userDetails = userService.getUserByUsername(username);
+        UserDetails userDetails = userService.getUserByUsername(username);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }
