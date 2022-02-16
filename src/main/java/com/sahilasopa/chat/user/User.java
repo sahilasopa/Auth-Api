@@ -2,9 +2,12 @@ package com.sahilasopa.chat.user;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -13,6 +16,7 @@ import java.util.Collection;
 @Table(name = "users")
 @Getter
 @Setter
+@Component
 public class User implements UserDetails {
 
     @Id

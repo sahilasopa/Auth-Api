@@ -19,17 +19,19 @@ public class UserController {
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final User user;
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserController(UserService userService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+    public UserController(UserService userService, JwtUtil jwtUtil, User user, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
+        this.user = user;
         this.authenticationManager = authenticationManager;
     }
 
     @GetMapping()
-    public List<User> getUser() {
+    public List<User> getAllUsers() {
         return userService.getUsers();
     }
 
@@ -59,9 +61,12 @@ public class UserController {
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
-    @DeleteMapping(path = "{studentId}")
-    public void deleteUser(@PathVariable long studentId) {
-        userService.deleteUser(studentId);
+    @DeleteMapping("/delete")
+    public void deleteUser(@RequestBody String token) {
+        if (jwtUtil.validateToken(token, user)) {
+            User user = userService.getUserByUsername(jwtUtil.extractUsername(token));
+            userService.deleteUser(user.getId());
+        }
     }
 
     @PutMapping(path = "{studentId}")
