@@ -63,9 +63,8 @@ public class UserController {
 
     @DeleteMapping("/delete")
     public void deleteUser(@RequestHeader String authorization) {
-        System.out.println("token was:" + authorization);
-        if (jwtUtil.validateToken(authorization, user)) {
-            User user = userService.getUserByUsername(jwtUtil.extractUsername(authorization));
+        if (jwtUtil.validateToken(authorization.substring(7), user)) {
+            User user = userService.getUserByUsername(jwtUtil.extractUsername(authorization.substring(7)));
             userService.deleteUser(user.getId());
         }
     }
