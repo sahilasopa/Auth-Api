@@ -38,19 +38,20 @@ public class UserController {
         if (user.getPassword() != null) {
             userService.addNewUser(user);
             jwtUtil.generateToken(user);
-            return ResponseEntity.ok(jwtUtil.generateToken(user));
+            return ResponseEntity.ok(new AuthenticationResponse(jwtUtil.generateToken(user)));
         }
         return ResponseEntity.ok("user not created");
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> generateToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+        System.out.println(authenticationRequest.getUsername() + authenticationRequest.getPassword());
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password", e);
+            return ResponseEntity.status(400).body("{\"message\":\"Invalid Username or Password\"}");
         }
         final UserDetails userDetails = userService
                 .getUserByUsername(authenticationRequest.getUsername());
