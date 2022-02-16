@@ -3,6 +3,7 @@ package com.sahilasopa.chat.user;
 import com.sahilasopa.chat.auth.AuthenticationRequest;
 import com.sahilasopa.chat.auth.AuthenticationResponse;
 import com.sahilasopa.chat.auth.JwtUtil;
+import com.sahilasopa.chat.exceptions.InvalidJwtTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -62,15 +63,29 @@ public class UserController {
     }
 
     @DeleteMapping("/delete")
-    public void deleteUser(@RequestHeader String authorization) {
+    public ResponseEntity<String> deleteUser(@RequestHeader String authorization) throws InvalidJwtTokenException {
         if (jwtUtil.validateToken(authorization.substring(7), user)) {
             User user = userService.getUserByUsername(jwtUtil.extractUsername(authorization.substring(7)));
             userService.deleteUser(user.getId());
-        }
+            return ResponseEntity.ok("User deleted successfully");
+        } else
+            throw new InvalidJwtTokenException("The authorization token is invalid");
     }
 
     @PutMapping(path = "{studentId}")
-    public void updateUser(@PathVariable long studentId, @RequestParam(required = false) String name, @RequestParam(required = false) String email) {
-        userService.updateUser(studentId, name, email);
+    public ResponseEntity<String> updateUser(@PathVariable long studentId, @RequestParam(required = false) String name, @RequestParam(required = false) String email, @RequestHeader String authorization) throws InvalidJwtTokenException {
+        if (jwtUtil.validateToken(authorization.substring(7), user)) {
+            userService.updateUser(studentId, name, email);
+            return ResponseEntity.ok("User updated successfully");
+        } else
+            throw new InvalidJwtTokenException("The authorization token is invalid");
+    }
+
+    @GetMapping(path = "/profile")
+    public ResponseEntity<User> getProfile(@RequestHeader String authorization) throws InvalidJwtTokenException {
+        if (jwtUtil.validateToken(authorization.substring(7), user)) {
+            return ResponseEntity.ok(userService.getUserByUsername(jwtUtil.extractUsername(authorization.substring(7))));
+        } else
+            throw new InvalidJwtTokenException("The authorization token is invalid");
     }
 }
