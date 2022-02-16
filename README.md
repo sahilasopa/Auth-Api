@@ -37,7 +37,7 @@ Create a new file `application.properties` inside `/src/main/resources/`
 
 add the following fields
 
-```java
+```
 spring.datasource.url=jdbc:postgresql://localhost:{port}/{database name}
 spring.datasource.username={username}
 spring.datasource.password={password}
