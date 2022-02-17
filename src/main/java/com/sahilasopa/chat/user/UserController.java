@@ -4,6 +4,7 @@ import com.sahilasopa.chat.auth.JwtUtil;
 import com.sahilasopa.chat.response.AuthenticationRequest;
 import com.sahilasopa.chat.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -39,27 +40,28 @@ public class UserController {
             try {
                 userService.addNewUser(user);
             } catch (IllegalArgumentException e) {
-                return ResponseEntity.status(400).body(new Response(e.getMessage(), 400).getResponse());
+                return ResponseEntity.status(400).body(new Response(e.getMessage()).getResponse());
             }
             jwtUtil.generateToken(user);
-            return ResponseEntity.ok(new Response(jwtUtil.generateToken(user), 200));
+            return ResponseEntity.ok(new Response(jwtUtil.generateToken(user)));
         }
-        return ResponseEntity.status(400).body(new Response("Password is required", 400).getResponse());
+        return ResponseEntity.status(400).body(new Response("Password is required").getResponse());
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping(value = "/authenticate")
     public ResponseEntity<?> generateToken(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(400).body(new Response("Invalid Username or Password", 400).getResponse());
+            System.out.println(new Response("Invalid Username or Password").getResponse());
+            return ResponseEntity.status(400).body(new Response("Invalid Username or Password").getResponse());
         }
         final UserDetails userDetails = userService
                 .getUserByUsername(authenticationRequest.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new Response(jwt, 200));
+        return ResponseEntity.ok(new Response(jwt).getResponse());
     }
 
     @DeleteMapping("/delete")
@@ -67,26 +69,26 @@ public class UserController {
         if (jwtUtil.validateToken(authorization.substring(7))) {
             User user = userService.getUserByUsername(jwtUtil.extractUsername(authorization.substring(7)));
             userService.deleteUser(user.getId());
-            return ResponseEntity.ok(new Response("User deleted successfully", 200));
+            return ResponseEntity.ok(new Response("User deleted successfully"));
         } else
-            return ResponseEntity.status(401).body(String.valueOf(new Response("The authorization token is invalid", 401).getResponse()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(String.valueOf(new Response("The authorization token is invalid").getResponse()));
     }
 
     @PutMapping(path = "update")
     public ResponseEntity<?> updateUser(@RequestParam(required = false) String name, @RequestParam(required = false) String email, @RequestHeader String authorization) {
         if (jwtUtil.validateToken(authorization.substring(7))) {
             userService.updateUser(userService.getUserByUsername(jwtUtil.extractUsername(authorization.substring(7))).getId(), name, email);
-            return ResponseEntity.ok(new Response("User updated successfully", 200).getResponse());
+            return ResponseEntity.ok(new Response("User updated successfully").getResponse());
         } else
-            return ResponseEntity.status(401).body(new Response("The authorization token is invalid", 401).getResponse());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response("The authorization token is invalid").getResponse());
     }
 
     @GetMapping(path = "/profile")
     public ResponseEntity<?> getProfile(@RequestHeader String authorization) {
         if (jwtUtil.validateToken(authorization.substring(7))) {
             User user = userService.getUserByUsername(jwtUtil.extractUsername(authorization.substring(7)));
-            return ResponseEntity.ok(new Response(user.toString(), 200));
+            return ResponseEntity.ok(new Response(user.toString()));
         } else
-            return ResponseEntity.status(401).body(String.valueOf(new Response("The authorization token is invalid", 401).getResponse()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(String.valueOf(new Response("The authorization token is invalid").getResponse()));
     }
 }
