@@ -2,14 +2,13 @@ package com.sahilasopa.chat.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 
 import java.util.HashMap;
 
 @Data
 @AllArgsConstructor
-public class ErrorResponse {
+public class Response {
     private String message;
     private int statusCode;
 
