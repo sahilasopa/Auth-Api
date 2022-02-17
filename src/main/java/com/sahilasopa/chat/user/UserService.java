@@ -26,14 +26,12 @@ public class UserService {
 
     public void addNewUser(User user) {
         if (user != null) {
-            if (user.getPassword().isEmpty() || user.getPassword() == null) {
-                throw new IllegalStateException("Password is required");
-            } else if (userRepository.findUserByEmail(user.getEmail()) != null) {
-                throw new IllegalStateException("Email is already registered");
+            if (userRepository.findUserByEmail(user.getEmail()) != null) {
+                throw new IllegalArgumentException("Email is already registered");
             } else if (user.getUsername().isEmpty() || user.getUsername() == null) {
-                throw new IllegalStateException("Username is required");
+                throw new IllegalArgumentException("Username is required");
             } else if (userRepository.findUserByUsername(user.getUsername()) != null) {
-                throw new IllegalStateException("Username is already registered");
+                throw new IllegalArgumentException("Username is already registered");
             }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setRole("user");

@@ -38,7 +38,11 @@ public class UserController {
     @PostMapping(path = "/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         if (user.getPassword() != null) {
-            userService.addNewUser(user);
+            try {
+                userService.addNewUser(user);
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.status(400).body(new ErrorResponse(e.getMessage(), 400).getResponse());
+            }
             jwtUtil.generateToken(user);
             return ResponseEntity.ok(new AuthenticationResponse(jwtUtil.generateToken(user)));
         }
