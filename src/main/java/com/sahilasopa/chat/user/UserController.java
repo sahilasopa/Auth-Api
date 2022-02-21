@@ -74,10 +74,14 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(String.valueOf(new Response("The authorization token is invalid").getResponse()));
     }
 
-    @PutMapping(path = "update")
+    @PostMapping(path = "/update")
     public ResponseEntity<?> updateUser(@RequestParam(required = false) String name, @RequestParam(required = false) String email, @RequestHeader String authorization) {
         if (jwtUtil.validateToken(authorization.substring(7))) {
-            userService.updateUser(userService.getUserByUsername(jwtUtil.extractUsername(authorization.substring(7))).getId(), name, email);
+            try {
+                userService.updateUser(userService.getUserByUsername(jwtUtil.extractUsername(authorization.substring(7))).getId(), name, email);
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.status(400).body(new Response(e.getMessage()).getResponse());
+            }
             return ResponseEntity.ok(new Response("User updated successfully").getResponse());
         } else
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response("The authorization token is invalid").getResponse());

@@ -49,12 +49,14 @@ public class UserService {
     public void updateUser(long UserId, String name, String email) {
         Optional<User> User = userRepository.findById(UserId);
         if (User.isPresent()) {
-            if (name != null && !name.isEmpty()) {
+            if (name != null && !name.isEmpty() && userRepository.findUserByUsername(name).getUsername() == null) {
                 User.get().setUsername(name);
+            }else{
+                throw new IllegalArgumentException("Username is already registered");
             }
             if (email != null && !email.isEmpty()) {
                 if (userRepository.findUserByEmail(email) != null) {
-                    throw new IllegalStateException("Invalid email");
+                    throw new IllegalArgumentException("Username is already registered");
                 }
                 User.get().setEmail(email);
             }
