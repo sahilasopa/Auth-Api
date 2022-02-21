@@ -55,7 +55,6 @@ public class UserController {
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
-            System.out.println(new Response("Invalid Username or Password").getResponse());
             return ResponseEntity.status(400).body(new Response("Invalid Username or Password").getResponse());
         }
         final UserDetails userDetails = userService
