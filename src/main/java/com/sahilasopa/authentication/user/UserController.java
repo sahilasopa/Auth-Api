@@ -1,8 +1,8 @@
-package com.sahilasopa.chat.user;
+package com.sahilasopa.authentication.user;
 
-import com.sahilasopa.chat.auth.JwtUtil;
-import com.sahilasopa.chat.response.AuthenticationRequest;
-import com.sahilasopa.chat.response.Response;
+import com.sahilasopa.authentication.auth.JwtUtil;
+import com.sahilasopa.authentication.response.AuthenticationRequest;
+import com.sahilasopa.authentication.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
-package com.sahilasopa.chat.auth;
+package com.sahilasopa.authentication.auth;
 
-import com.sahilasopa.chat.user.UserService;
+import com.sahilasopa.authentication.user.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

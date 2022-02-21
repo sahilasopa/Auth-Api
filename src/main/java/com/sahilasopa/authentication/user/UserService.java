@@ -1,4 +1,4 @@
-package com.sahilasopa.chat.user;
+package com.sahilasopa.authentication.user;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.sahilasopa.chat.auth;
+package com.sahilasopa.authentication.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

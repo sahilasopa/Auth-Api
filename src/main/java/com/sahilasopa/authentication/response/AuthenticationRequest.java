@@ -1,4 +1,4 @@
-package com.sahilasopa.chat.response;
+package com.sahilasopa.authentication.response;
 
 import lombok.Data;
 

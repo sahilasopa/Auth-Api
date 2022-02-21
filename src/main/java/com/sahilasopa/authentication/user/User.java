@@ -1,4 +1,4 @@
-package com.sahilasopa.chat.user;
+package com.sahilasopa.authentication.user;
 
 import lombok.Getter;
 import lombok.Setter;

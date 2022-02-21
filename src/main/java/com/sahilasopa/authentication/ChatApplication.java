@@ -1,4 +1,4 @@
-package com.sahilasopa.chat;
+package com.sahilasopa.authentication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
