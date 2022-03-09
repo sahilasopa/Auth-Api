@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.sahilasopa</groupId>
-    <artifactId>Auth</artifactId>
+    <artifactId>Authentication</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Auth</name>
+    <name>Authentication</name>
     <description>Authentication API</description>
     <properties>
         <java.version>17</java.version>
