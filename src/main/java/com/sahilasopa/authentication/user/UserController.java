@@ -42,8 +42,8 @@ public class UserController {
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.status(400).body(new Response(e.getMessage()).getResponse());
             }
-            jwtUtil.generateToken(user);
-            return ResponseEntity.ok(new Response(jwtUtil.generateToken(user)));
+            System.out.println(ResponseEntity.ok(new Response(jwtUtil.generateToken(user))));
+            return ResponseEntity.ok(new Response(jwtUtil.generateToken(user)).getResponse());
         }
         return ResponseEntity.status(400).body(new Response("Password is required").getResponse());
     }
